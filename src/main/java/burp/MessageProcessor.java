@@ -16,11 +16,12 @@ public class MessageProcessor implements Runnable {
     private List<ResultEntry> results;
     private ResultsTableModel resultsTableModel;
 
-    public MessageProcessor(int toolFlag, IHttpRequestResponse messageInfo,
+    public MessageProcessor(Component component, int toolFlag, IHttpRequestResponse messageInfo,
                             boolean inScopeOnly, boolean messageIsRequest,
                             List<Payload> payloads,
                             List<ResultEntry> results,
                             ResultsTableModel resultsTableModel) {
+        this.component = component;
         this.toolFlag = toolFlag;
         this.messageInfo = messageInfo;
         this.inScopeOnly = inScopeOnly;
@@ -85,6 +86,15 @@ public class MessageProcessor implements Runnable {
                                     int row = results.size() - 1;
                                     resultsTableModel.fireTableRowsInserted(row, row);//Have to add 1 by 1 to keep model and view aligned to prevent IOOBException
                                 }
+                                // Alert user, change tab color
+                                for(int i = 0; i < this.component.getTabCount(); i++)
+                                {
+                                    if (this.component.getComponentAt(i) == this)
+                                    {
+                                        tabbedPane.setBackgroundAt(i, new Color(0xff0000));
+                                        break;
+                                    }
+                                }
                             }catch(Exception e){
                                 BurpExtender.sterror.println("An exception occurred when adding Results");
                                 e.printStackTrace();
@@ -98,6 +108,9 @@ public class MessageProcessor implements Runnable {
             }
         }
     }
+
+
+
 
     //Return the start index for the extract by going back as far as you can whilst staying within bounds of response
     private int getMaxStartIndex(String response, int extractStartIndex, int extractEndIndex) {

@@ -272,21 +272,11 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IMessag
     private void setDefaults(){
         payloads.clear();
 
-        //Default payloads
-        payloads.add(new Payload("admin", false, true));
-        payloads.add(new Payload("password", false, true));
-        payloads.add(new Payload("passcode", false, true));
-        payloads.add(new Payload("port.{0,7}\\d+", true, true));
-        payloads.add(new Payload("sql", false, true));
-        payloads.add(new Payload("<!--", false, true));
-        payloads.add(new Payload("/*", false, true));
-        payloads.add(new Payload("todo", false, true));
-        payloads.add(new Payload("secret", false, true));
-        payloads.add(new Payload("//# sourceURL", false, true));
-        payloads.add(new Payload("//# sourceMappingURL", false, true));
-        payloads.add(new Payload("api", false, true));
-        payloads.add(new Payload("private", false, true));
-        payloads.add(new Payload("debug", false, true));
+        // For CTF
+        payloads.add(new Payload("flag{", false, true));
+        payloads.add(new Payload("FLAG{", false, true));
+        payloads.add(new Payload("ctf{", false, true));
+        payloads.add(new Payload("CTF{", false, true));
 
         checkBox_isInScope.setSelected(true);
         inScopeOnly=true;
@@ -311,7 +301,7 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IMessag
     //
     @Override
     public void processHttpMessage(int toolFlag, boolean messageIsRequest, IHttpRequestResponse messageInfo){
-        service.execute(new MessageProcessor(toolFlag, messageInfo, inScopeOnly, messageIsRequest, payloads, results, resultsTableModel));
+        service.execute(new MessageProcessor(splitPane_main, toolFlag, messageInfo, inScopeOnly, messageIsRequest, payloads, results, resultsTableModel));
     }
 
     //
